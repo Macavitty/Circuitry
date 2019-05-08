@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module mult (
     input clk_i,
     input rst_i,
@@ -54,7 +56,7 @@ module mult (
                         if(end_step) begin
                             state  <= IDLE;
                             y_bo   <= part_res[15:8];
-                            y_bo[15] <= sign;
+                            y_bo[7] <= sign;
                         end
 
                         part_res = part_res + shifted_part_sum;
@@ -66,3 +68,4 @@ module mult (
         end
 
 endmodule
+
