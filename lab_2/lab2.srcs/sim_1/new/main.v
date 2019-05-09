@@ -40,8 +40,10 @@ end
 
 always@ (posedge clk) begin
     case(ctr)
-        4'd0:
+        4'd0: begin
             rst = 1;
+            ctr = ctr + 1;
+              end
         4'd1:
             rst = 0;
     endcase
