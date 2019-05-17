@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-
 module main();
 
 reg clk = 1, rst, start;
@@ -20,23 +19,30 @@ func f(
     .y_bo(y)
     );
 
-reg [7:0] test_value [7:0];
-reg signed [7:0] true_res, res;
+reg [7:0] test_value [7:0], true_test_value [7:0];
+reg signed [7:0] res;
 reg [3:0] ctr = 0;
 
 initial begin
-    test_value[0] = 8'b0000_0000;
-    test_value[1] = 8'b0100_0000;
-    test_value[2] = 8'b0000_0000;
-    test_value[3] = 8'b0000_0000;
-    test_value[4] = 8'b0000_0000;
-    test_value[5] = 8'b0000_0000;
-    test_value[6] = 8'b0000_0000;
-    test_value[7] = 8'b1111_1111;
-
+    test_value[0] = -8'b0111_1111; // -0.992 => 0.548 (0100_0110)
+    test_value[1] = -8'b0100_0000; // -1/2 => 0.878 (0111_0000)
+    test_value[2] = -8'b0010_0000; // -1/4 => 0.969 (0111_1100)
+    test_value[3] = -8'b0001_0001; // -0.117 => 0.991 (0111_1111)
+    test_value[4] = -8'b0001_0000; // -1/8 * => 0.992 (0111_1111)
+    test_value[5] = 8'b0001_0000; // 1/8 * => 0.992 (0111_1111)
+    test_value[6] = 8'b0001_1010; // 1/5 => 0.98 (0111_1101)
+    test_value[7] = 8'b0010_1011; // 1/3 => 0.946 (0111_1001)
+    
+    true_test_value[0] = 8'b0100_0110; 
+    true_test_value[1] = 8'b0111_0000; 
+    true_test_value[2] = 8'b0111_1100;  
+    true_test_value[3] = 8'b0111_1111; 
+    true_test_value[4] = 8'b0111_1111; 
+    true_test_value[5] = 8'b0111_1111; 
+    true_test_value[6] = 8'b0111_1101; 
+    true_test_value[7] = 8'b0111_1001;
 end 
 
-//assign true_res = 1 - (x*x)/2 + (x*x*x*x)/24;
 
 always@ (posedge clk) begin
     case(ctr)
@@ -50,46 +56,45 @@ always@ (posedge clk) begin
     if (!busy) begin
         case(ctr)
             4'd2:   begin
-                x <= test_value[0];
-                start <= 1;
+                x = test_value[0];
+                start = 1;
                     end
             4'd3:   begin
-                x <= test_value[1];
-                start <= 1;
+                x = test_value[1];
+                start = 1;
                     end
             4'd4:   begin
-                x <= test_value[2];
-                start <= 1;
+                x = test_value[2];
+                start = 1;
                     end
             4'd5:   begin
-                x <= test_value[3];
-                start <= 1;
+                x = test_value[3];
+                start = 1;
                     end
             4'd6:   begin
-                x <= test_value[4];
-                start <= 1;
+                x = test_value[4];
+                start = 1;
                     end
             4'd7:   begin
-                x <= test_value[5];
-                start <= 1;
+                x = test_value[5];
+                start = 1;
                     end
             4'd8:   begin
-                x <= test_value[6];
-                start <= 1;
+                x = test_value[6];
+                start = 1;
                     end
             4'd9:   begin
-                x <= test_value[7];
-                start <= 1;
+                x = test_value[7];
+                start = 1;
                     end
             4'd11: $stop;
         endcase
         if(ctr > 2) begin
             res = y;
-            true_res = 1 - (test_value[ctr-3]*test_value[ctr-3])/2 + (test_value[ctr-3]*test_value[ctr-3]*test_value[ctr-3]*test_value[ctr-3])/24;
-            if(res == true_res) begin
+            if(res == true_test_value[ctr-3]) begin
                 $display("---SUCCESS---\n\tx=0.%b\n\ty=0.%b",test_value[ctr-3], res);
             end else begin
-                $display("---FALL---\n\tx=0.%b\n\ty=0.%b\n\ttrue_y=0.%b",test_value[ctr-3], res, true_res);
+                $display("---FALL---\n\tx=0.%b\n\ty=0.%b\n\ttrue_y=0.%b",test_value[ctr-3], res, true_test_value[ctr-3]);
             end
         end
         ctr = ctr + 1;

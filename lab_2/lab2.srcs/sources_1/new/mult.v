@@ -45,8 +45,8 @@ module mult (
                 IDLE:
                     if(start_i) begin
                         state  <= WORK;
-                        a        <= a_bi[7]?-a_bi:a_bi;
-                        b        <= b_bi[7]?-b_bi:b_bi;
+                        a        <= a_bi[7] ? -a_bi : a_bi;
+                        b        <= b_bi[7] ? -b_bi : b_bi;
                         sign     <= a_bi[7] ^ b_bi[7];
                         ctr      <= 0;
                         part_res <= 0;
@@ -55,7 +55,7 @@ module mult (
                     begin
                         if(end_step) begin
                             state  <= IDLE;
-                            y_bo    <= sign?-part_res[15:8]:part_res[15:8];
+                            y_bo    <= sign ? -part_res[15:8] : part_res[15:8];
                             y_bo[7] <= sign;
                         end
 

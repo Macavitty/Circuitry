@@ -26,12 +26,7 @@ module func(
     wire signed [7:0] a_mult, b_mult;
     reg start_mult;
     wire busy_mult;
-    
-//    wire signed [7:0] mux_const_out, mux_x_out;  
-//    wire signed [7:0] mux_const_in, mux_x_in;
-//    reg [1:0] mux_const_adr;
-//    reg mux_x_adr;
-        
+         
             
     mult mult_1 (
         .clk_i(clk_i),
